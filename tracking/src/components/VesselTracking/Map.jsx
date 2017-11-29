@@ -1,43 +1,52 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import GoogleMapReact from 'google-map-react'
-// import { mapOptions } from './MapOptions'
 import { PositionMarker } from './Marker'
 
 class Map extends PureComponent {
 
   static propTypes = {
-    vesseltracks: PropTypes.array,
+    vesseltracks: PropTypes.array.isRequired,
   }
 
+  // We render a map with each position retrieved as marker on it. 
   render() {
     const { vesseltracks } = this.props
-console.log(vesseltracks)
+
+    let vesseltracksCount = vesseltracks.length
     let positionList = []
-    // if (storeCount > 0) {
-      positionList = vesseltracks.map(function(position, index) {
-        console.log(position['$'])
+    positionList = vesseltracks.map(function(position, index) {
+        if (vesseltracksCount === index + 1) {
           return (
             <PositionMarker
               key={index}
-              lat={position.LAT}
-              lng={position.LON}
-              position={position}
+              lat={position['$'].LAT}
+              lng={position['$'].LON}
+              position={position['$']}
+              last={true}
             />
           )
-        })
-    // }
+        } else {
+          return (
+            <PositionMarker
+              key={index}
+              lat={position['$'].LAT}
+              lng={position['$'].LON}
+              position={position['$']}
+              last={false}
+            />
+          )
+        }
+      })
 
     return (
       <div style={{width: '100%', height: '600px'}}>
         <GoogleMapReact
           center={{lat: 37.944330, lng: 23.638500}}
           zoom={8}
-          // options={mapOptions}
           scrollwheel='true'
           fullscreenControl='false'
           mapTypeControl='false'
-          // onChildClick={this.onChildClick}
         >
           {positionList}
         </GoogleMapReact>
