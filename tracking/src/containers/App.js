@@ -1,15 +1,12 @@
 import React from 'react'
+import Header from '../components/Header'
 import VesselTrackingPage from './VesselTrackingPage'
 
-import logo from '../images/logo.svg'
 import './App.css'
 
 const App = () => (
   <div className="App">
-    <header className="App-header">
-      <img src={logo} className="App-logo" alt="logo" />
-      <h1 className="App-title">React Vessel Tracking App</h1>
-    </header>
+    <Header />
     <main>
       <VesselTrackingPage />
     </main>
