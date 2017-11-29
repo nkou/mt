@@ -7,15 +7,27 @@ class VesselTrackingPage extends PureComponent {
     super(props)
     this.state = {
       mmsi: 240389000,
-      vesseltracks: []
+      vesseltracks: [],
+      intervalId: null
     }
   }
 
+  componentDidMount() {
+    const { mmsi } = this.state
+    let intervalId = setTimeout(this.retrieveVesselTracks(mmsi), 3000)
+    this.setState({intervalId})
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.state.intervalId)
+  }
+
   // Retrive data for Vessel Tracks using JSON API source.
-  componentDidMount(){
-    ApiStore.getVesselTracks().then((vesseltracks) => {
+  retrieveVesselTracks(mmsi) {
+    console.log('on')
+    ApiStore.getVesselTracks(mmsi).then((vesseltracks) => {
       this.setState({vesseltracks})
-    })
+    }).catch((error) => {alert(error)})
   }
 
   // We keep the input in the state.
@@ -25,9 +37,8 @@ class VesselTrackingPage extends PureComponent {
 
   // We use the MMSI input for using it as parameter to the API call.
   handleClick(e) {
-    ApiStore.getVesselTracks(this.state.mmsi).then((vesseltracks) => {
-      this.setState({vesseltracks})
-    }).catch((error) => {alert(error)})
+    const { mmsi } = this.state
+    this.retrieveVesselTracks(mmsi)
   }
 
   render() {
